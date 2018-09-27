@@ -78,7 +78,6 @@ public class TodoItemCotroller {
 			e.printStackTrace();
 			return "error";
 		}
-
 		//return itemDao.findAll().toString();
 	}
 	
