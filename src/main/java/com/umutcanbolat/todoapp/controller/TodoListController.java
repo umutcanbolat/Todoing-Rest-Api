@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.umutcanbolat.todoapp.model.TodoList;
+import com.umutcanbolat.todoapp.repo.TodoItemDAO;
 import com.umutcanbolat.todoapp.repo.TodoListDAO;
 
 @RestController
@@ -15,6 +16,8 @@ public class TodoListController {
 	
 	@Autowired
 	TodoListDAO todoListDao;
+	@Autowired
+	TodoItemCotroller itemCtl;
 	
 	@RequestMapping("/addTodoList")
 	public String addTodoList(TodoList todoList) {
@@ -24,6 +27,7 @@ public class TodoListController {
 	
 	@RequestMapping("/deleteTodoListById")
 	public String deleteTodoListById(@RequestParam int listId) {
+		itemCtl.deleteAllItemsByListId(listId);
 		todoListDao.deleteById(listId);
 		return "deleted " + listId;
 	}

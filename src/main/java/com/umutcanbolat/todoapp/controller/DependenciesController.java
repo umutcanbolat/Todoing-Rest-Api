@@ -35,14 +35,14 @@ public class DependenciesController {
 //		System.out.println(depDao.findByTodoItemAndDependentTo(dep.getTodoItem(), dep.getDependentTo()).toString());
 	}
 	
-	@RequestMapping("/deleteAllDependencies")
+	@RequestMapping("/deleteAllDependenciesByTodoItem")
 	public void deleteAllDependenciesByTodoItem(int todoItem) {
-		depDao.deleteAll(depDao.findByTodoItem(todoItem));
-		depDao.deleteAll(depDao.findByDependentTo(todoItem));
+		depDao.deleteAll(depDao.findAllByTodoItem(todoItem));
+		depDao.deleteAll(depDao.findAllByDependentTo(todoItem));
 	}
 	
-	@RequestMapping("/deleteDependency")
-	public void deleteAllDependenciesByTodoItem(Dependencies dep) {
+	@RequestMapping("/deleteDependencyByTodoItem")
+	public void deleteDependencyByTodoItem(Dependencies dep) {
 		List<Dependencies> deps = depDao.findByTodoItemAndDependentTo(dep.getTodoItem(), dep.getDependentTo());
 		if(deps.size()>0) {
 			depDao.deleteById(deps.get(0).getId());

@@ -53,6 +53,23 @@ public class TodoItemCotroller {
 		
 	}
 	
+	@RequestMapping("/deleteAllItemsByListId")
+	public String deleteAllItemsByListId(@RequestParam int listId) {
+		
+		try {
+			Iterable<TodoItem> todoItems = itemDao.findAllByList(listId);
+			for(TodoItem it : todoItems) {
+				this.deleteItemById(it.getItemId());
+			}
+			itemDao.deleteAll(todoItems);
+			return "deleted all items of listId: " + listId;
+		}catch(Exception ex) {
+			ex.printStackTrace();
+			return "error";
+		}
+		
+	}
+	
 	@RequestMapping("/getItemById")
 	public String getItemById(@RequestParam int itemId) {
 		TodoItem it = itemDao.findById(itemId).orElse(null);
