@@ -1,14 +1,17 @@
 package com.umutcanbolat.todoapp.controller;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.umutcanbolat.todoapp.model.TodoItem;
 import com.umutcanbolat.todoapp.repo.TodoItemDAO;
 
@@ -19,83 +22,51 @@ public class TodoItemCotroller {
 	@Autowired
 	DependenciesController depCtl;
 	
-	@RequestMapping("/addItem")
-	public String addItem(TodoItem item) {
-		try {
+	@PostMapping("/addItem")
+	public TodoItem addItem(TodoItem item) throws IllegalStateException {
 			if (item != null) {
 				if (item.getItemName() != null && !item.getItemName().isEmpty()) {
 					if (item.getList() != 0) {
 						item.setCreteDate(new Date());
 						itemDao.save(item);
-						return "added " + item.toString();
+						return item;
 					}
 				}
-				
 			}
-			return "itemName and/or list are not provided";
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			return "err";
-		}
+			//return "itemName and/or list are not provided";
+			throw new IllegalStateException("itemName and/or list are not provided");
 	}
 	
-	@RequestMapping("/deleteItemById")
-	public String deleteItemById(@RequestParam int itemId) {
-		
-		try {
+	@DeleteMapping("/deleteItemById/{itemId}")
+	public String deleteItemById(@PathVariable int itemId) {
 			depCtl.deleteAllDependenciesByTodoItem(itemId);
 			itemDao.deleteById(itemId);
 			return "deleted " + itemId;
-		}catch(Exception ex) {
-			ex.printStackTrace();
-			return "error";
-		}
-		
 	}
 	
-	@RequestMapping("/deleteAllItemsByListId")
-	public String deleteAllItemsByListId(@RequestParam int listId) {
-		
-		try {
+	@DeleteMapping("/deleteAllItemsByListId/{listId}")
+	public String deleteAllItemsByListId(@PathVariable int listId) {
 			Iterable<TodoItem> todoItems = itemDao.findAllByList(listId);
 			for(TodoItem it : todoItems) {
 				this.deleteItemById(it.getItemId());
 			}
 			itemDao.deleteAll(todoItems);
 			return "deleted all items of listId: " + listId;
-		}catch(Exception ex) {
-			ex.printStackTrace();
-			return "error";
-		}
-		
 	}
 	
 	@RequestMapping("/getItemById")
-	public String getItemById(@RequestParam int itemId) {
+	public TodoItem getItemById(@RequestParam int itemId) throws JsonProcessingException {
 		TodoItem it = itemDao.findById(itemId).orElse(null);
 		if(it!=null) {
-			try {
-				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-				return ow.writeValueAsString(it);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "error";
-			}
+			return it;
 		}else {
-			return "no item found with id " + itemId;
+			throw new IllegalStateException("no item found with id " + itemId);
 		}
 	}
 	
 	@RequestMapping("/getAllItems")
-	public String getAllItems() {
-		try {
-			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-			return ow.writeValueAsString(itemDao.findAll());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
-		//return itemDao.findAll().toString();
+	public List<TodoItem> getAllItems() {
+		return (List<TodoItem>) itemDao.findAll();
 	}
 	
 }

@@ -1,14 +1,16 @@
 package com.umutcanbolat.todoapp.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.umutcanbolat.todoapp.model.TodoList;
-import com.umutcanbolat.todoapp.repo.TodoItemDAO;
 import com.umutcanbolat.todoapp.repo.TodoListDAO;
 
 @RestController
@@ -19,44 +21,37 @@ public class TodoListController {
 	@Autowired
 	TodoItemCotroller itemCtl;
 	
-	@RequestMapping("/addTodoList")
-	public String addTodoList(TodoList todoList) {
-		todoListDao.save(todoList);
-		return "added " + todoList.getListName() + " " + todoList.getListId();
+	@PostMapping("/addTodoList")
+	public TodoList addTodoList(TodoList todoList) {
+		if(!"".equals(todoList.getListName())) {
+			todoListDao.save(todoList);
+			return todoList;
+		}
+		throw new IllegalStateException();
 	}
 	
-	@RequestMapping("/deleteTodoListById")
-	public String deleteTodoListById(@RequestParam int listId) {
+	@DeleteMapping("/deleteTodoList/{listId}")
+	public String deleteTodoListById(@PathVariable int listId) {
 		itemCtl.deleteAllItemsByListId(listId);
 		todoListDao.deleteById(listId);
 		return "deleted " + listId;
 	}
 
 	@RequestMapping("/getTodoListById")
-	public String getTodoListById(@RequestParam int listId) {
+	public TodoList getTodoListById(@RequestParam int listId) {
 		TodoList l = todoListDao.findById(listId).orElse(null);
 		
 		if(l!=null) {
-			try {
-				ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-				return ow.writeValueAsString(l);
-			} catch (Exception e) {
-				e.printStackTrace();
-				return "error";
-			}
+			return l;
 		}else {
-			return "no list found with id " + listId;
+			//return "no list found with id " + listId;
+			throw new IllegalStateException("no list found with provided id: " + listId);
 		}
 	}
 	
 	@RequestMapping("/getTodoListAll")
-	public String getTodoListAll() {
-		try {
-			ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-			return ow.writeValueAsString(todoListDao.findAll());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return "error";
-		}
+	public List<TodoList> getTodoListAll() {
+		return (List<TodoList>) todoListDao.findAll();
+
 	}
 }
