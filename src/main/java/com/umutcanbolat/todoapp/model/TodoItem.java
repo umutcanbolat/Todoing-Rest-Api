@@ -12,6 +12,8 @@ import javax.persistence.OneToMany;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 public class TodoItem {
 	@Id
@@ -28,8 +30,10 @@ public class TodoItem {
 	@Column(nullable = false)
 	private boolean status;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date deadline;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
+	@JsonFormat(pattern="dd-MM-yyyy")
 	private Date creteDate;
 	@OneToMany(mappedBy = "todoItem")
 	private List<Dependencies> dependencies;
