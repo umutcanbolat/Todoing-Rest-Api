@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.umutcanbolat.todoapp.model.Dependencies;
 import com.umutcanbolat.todoapp.model.TodoItem;
 import com.umutcanbolat.todoapp.repo.TodoItemDAO;
 
@@ -48,6 +49,16 @@ public class TodoItemCotroller {
 			if (it.isStatus()) {
 				it.setStatus(false);
 			} else {
+				for(Dependencies dep: it.getDependencies()) {
+					try {
+						if(!this.getItemById(dep.getDependentTo()).isStatus()) {
+							return it;
+						}
+					} catch (JsonProcessingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 				it.setStatus(true);
 			}
 			itemDao.save(it);
