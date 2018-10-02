@@ -31,7 +31,7 @@ public class TodoItemCotroller {
 		if (item != null) {
 			if (item.getItemName() != null && !item.getItemName().isEmpty()) {
 				if (item.getList() != 0) {
-					item.setCreteDate(new Date());
+					item.setCreateDate(new Date());
 					itemDao.save(item);
 					return item;
 				}

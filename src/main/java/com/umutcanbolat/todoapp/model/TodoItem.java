@@ -34,7 +34,7 @@ public class TodoItem {
 	private Date deadline;
 	@DateTimeFormat(pattern = "dd-MM-yyyy")
 	@JsonFormat(pattern="dd-MM-yyyy")
-	private Date creteDate;
+	private Date createDate;
 	@OneToMany(mappedBy = "todoItem")
 	private List<Dependencies> dependencies;
 	public int getItemId() {
@@ -73,11 +73,11 @@ public class TodoItem {
 	public void setDeadline(Date deadline) {
 		this.deadline = deadline;
 	}
-	public Date getCreteDate() {
-		return creteDate;
+	public Date getCreateDate() {
+		return createDate;
 	}
-	public void setCreteDate(Date creteDate) {
-		this.creteDate = creteDate;
+	public void setCreateDate(Date createDate) {
+		this.createDate = createDate;
 	}
 	public List<Dependencies> getDependencies() {
 		return dependencies;
@@ -88,7 +88,7 @@ public class TodoItem {
 	@Override
 	public String toString() {
 		return "TodoItem [itemId=" + itemId + ", list=" + list + ", itemName=" + itemName + ", itemDesc=" + itemDesc
-				+ ", status=" + status + ", deadline=" + deadline + ", creteDate=" + creteDate + ", dependencies="
+				+ ", status=" + status + ", deadline=" + deadline + ", createDate=" + createDate + ", dependencies="
 				+ dependencies + "]";
 	}
 }
