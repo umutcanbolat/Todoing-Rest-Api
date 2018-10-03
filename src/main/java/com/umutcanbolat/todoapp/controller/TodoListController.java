@@ -19,7 +19,7 @@ public class TodoListController {
 	@Autowired
 	TodoListDAO todoListDao;
 	@Autowired
-	TodoItemCotroller itemCtl;
+	TodoItemController itemCtl;
 	
 	@PostMapping("/addTodoList")
 	public TodoList addTodoList(TodoList todoList) {

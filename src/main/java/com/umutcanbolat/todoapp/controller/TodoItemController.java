@@ -20,7 +20,7 @@ import com.umutcanbolat.todoapp.repo.TodoItemDAO;
 
 @RestController
 @CrossOrigin
-public class TodoItemCotroller {
+public class TodoItemController {
 	@Autowired
 	TodoItemDAO itemDao;
 	@Autowired
