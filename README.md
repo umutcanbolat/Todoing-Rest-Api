@@ -1,6 +1,8 @@
 # Todoing-Rest-Api
 The rest api developed for the project Todoing, a simple todo app.
 
+API is deployed on heroku: [Heroku](https://todoing-rest-api.herokuapp.com/getTodoListAll )
+
 ## Client Repository
 Find the client repo here: [Todoing-React-Client](https://github.com/umutcanbolat/Todoing-React-Client)
 
